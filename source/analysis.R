@@ -9,22 +9,37 @@ library(mapproj)
 data <- read.csv("../data/incarceration_trends.csv")
 
 # Introduction Information
+
 var_num <- ncol(data)
 obs_num <- nrow(data)
-max_year <- max(data$year)
-min_year <- min(data$year)
 
 # Summary Information
 
+data_2011 <- data %>%
+  filter(year == 2011)
+
+data_2016 <- data %>%
+  filter(year == 2016)
+
 data_recent <- data %>%
   filter(year >= 2005, year <= 2016)
+
+avg_prison_admission_rate <- mean(data_2016$total_prison_adm_rate, na.rm = T)
+avg_black_prison_adm_rate <- mean(data_2016$black_prison_adm_rate,
+  na.rm = T
+)
+avg_white_prison_adm_rate <- mean(data_2016$white_prison_adm_rate,
+  na.rm = T
+)
+max_black_prison_adm_rate <- max(data_2016$black_prison_adm_rate, na.rm = T)
+black_prison_adm_rate_diff <- avg_black_prison_adm_rate -
+  mean(data_2011$black_prison_adm_rate, na.rm = T)
 
 summary_table <- data %>%
   filter(year >= 2011, year <= 2016) %>%
   group_by(year) %>%
   summarize(
-    avg_county_jail_admission_rate = mean(total_jail_adm_rate, na.rm = T),
-    avg_county_prison_admission_rate = mean(total_prison_adm_rate, na.rm = T),
+    avg_prison_admission_rate = mean(total_prison_adm_rate, na.rm = T),
     avg_white_prison_admission_rate =
       mean(white_prison_adm_rate, na.rm = T),
     avg_black_prison_admission_rate =
@@ -36,6 +51,8 @@ summary_table <- data %>%
     avg_native_prison_admission_rate =
       mean(native_prison_adm_rate, na.rm = T),
   )
+
+# time trend plot
 
 time_trend_data <- data_recent %>%
   group_by(year) %>%
@@ -54,7 +71,9 @@ time_trend_data <- data_recent %>%
   )
 
 time_trend_plot <- ggplot(time_trend_data, aes(x = year)) +
-  geom_line(aes(y = avg_county_prison_admission_rate, colour = "Overall")) +
+  geom_line(aes(y = avg_county_prison_admission_rate, colour = "Overall", ),
+    size = 2
+  ) +
   geom_line(aes(y = avg_white_prison_admission_rate, colour = "White")) +
   geom_line(aes(y = avg_black_prison_admission_rate, colour = "Black")) +
   geom_line(aes(y = avg_latinx_prison_admission_rate, colour = "Latinx")) +
@@ -70,12 +89,14 @@ time_trend_plot <- ggplot(time_trend_data, aes(x = year)) +
     values = c(
       "Overall" = "purple", "White" = "steelblue",
       "Black" = "black", "Latinx" = "darkred",
-      "Asian American / Pacific Islander" = "yellow",
+      "Asian American / Pacific Islander" = "darkorange",
       "Native American" = "green"
     )
   ) +
   ggtitle("Prison Admission Rate by Race from 2005 to 2016") +
-  labs(y = "Prison Admission Rate (%)", x = "Year")
+  labs(y = "Prison Admission Rate", x = "Year")
+
+# comparison plot
 
 variable_comparison_data <- data_recent %>%
   filter(year == 2016) %>%
@@ -99,12 +120,14 @@ variable_comparison_plot <- ggplot(
     mapping = aes(color = state)
   ) +
   geom_smooth(formula = y ~ x, method = "lm", se = FALSE) +
-  ggtitle("Relationship between states' black population and prison admission
-       rate") +
+  ggtitle("Relationship Between States' Black Population and Prison Admission
+       Rate") +
   labs(
-    y = "Average Prison Admission Rate of Black People in 2016 (%)",
+    y = "Average Prison Admission Rate of Black People in 2016",
     x = "Black Population"
   )
+
+# map plot
 
 map_2016 <- data_recent %>%
   filter(year == 2016) %>%
@@ -142,7 +165,7 @@ map_plot <- ggplot(map_data) +
     ),
   ) +
   coord_map() +
-  scale_fill_viridis_c(option = "magma") +
-  labs(fill = "Prison Admission Rate of Black People in 2016 (%)") +
+  scale_fill_continuous(type = "gradient") +
+  labs(fill = "Prison Admission Rate of Black People in 2016") +
   blank_theme +
-  ggtitle("Map of Prison Admission Rate of Black People by State")
+  ggtitle("Map of Prison Admission Rate of Black People by State in 2016")

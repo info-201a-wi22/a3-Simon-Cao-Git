@@ -12,38 +12,60 @@ source("../source/analysis.R")
 ```
 
 ## Introduction
-<p>The data set used in this analysis is from [this repository](https://github.com/vera-institute/incarceration-trends/blob/master/incarceration_trends.csv).
-The dataset provides county-level data on incarceration in the 
-U.S. with `r format(obs_num,big.mark =",")` observations and
-`r format(var_num,big.mark =",")` variables. </p>
-<p>The United States has a significant problem in racial justice, especially in 
-racial discrimination by law enforcement. In this analysis, we focus on the 
-U.S. prison admission rate of people of color to identify the unfairness. </p>
+<p>The data set used as the basis of the analysis in this report is from [this repository](https://github.com/vera-institute/incarceration-trends/blob/master/incarceration_trends.csv).
+This data set from the Vera Institute of Justice provides county-level data on
+the topic of incarceration in the U.S. with `r format(obs_num,big.mark =",")`
+observations and `r format(var_num,big.mark =",")` variables. </p>
+<p>The United States has a significant social problem in racial justice, 
+especially in racial discrimination by law enforcement. In this analysis, 
+we focus on the U.S. prison admission rate of people of color to identify the 
+racial discrimination involved. </p>
 
 # Summary Information
-- The prison admission rate below is established on a per 100,000 people basis.
-It is clear that through 2011 to 2016, people of color suffer significant larger
- prison admission rate than average with the black population stands out (
-greater than 1000 admission rate).
-Detailed numbers are listed below.
-
+<p>In general, people of color suffer significant larger prison admission rate
+than average with the black population stands out. For example, In 2016, the
+average prison admission rate is
+`r format(avg_prison_admission_rate,big.mark =",")`, but for the
+ black population, the number is significantly higher, with an average of
+`r format(avg_black_prison_adm_rate,big.mark =",")`, and a maximum of
+`r format(max_black_prison_adm_rate,big.mark =",")`, comparing to the white
+population average `r format(avg_white_prison_adm_rate,big.mark =",")`.
+However, through out the years, this condition seems to be improving. 
+From 2011 to 2016, the average prison admission rate for black people decreased
+by `r format(black_prison_adm_rate_diff,big.mark =",")`. All detailed numbers
+are listed below.
+ </p>
 ```{r, echo=FALSE}
 kable(summary_table)
 ```
+- The prison admission rate is established on a per 100,000 people basis.
 
-## Trends over time plot 
-
+## Trends over time plot
+<p>The following time trend plot gives a sense of the difference in prison
+admission between race groups changes of the situation over time.
+From the graph, we could see that the black population has significantly higher
+prison admission rate than other race groups. However, it seems like the
+situation is improving over the years.</p>
 ```{r, echo=FALSE}
 time_trend_plot
 ```
 
 
 ## Variable Comparison Plot
+<p>The plot compared the prison admission rate with the black population
+for all 50 states in 2016. By fitting linear regression to the scatter plot,
+we find that with more black population, prison admission actually drops rather
+than stays on the same level. This could imply states with more black population
+may have fairer law enforcement based on more influence.</p>
 ```{r, echo=FALSE, fig.width = 8, fig.asp = .8}
 suppressWarnings(print(variable_comparison_plot))
 ```
 
 ## Map plot
+<p>The following is a heat map of prison admission rate of black people in 2016.
+The map reveals geological distribution of discrimination, high lighting more
+severe racial injustice in central America with Missouri having the highest
+prison admission rate for black people. </p>
 ```{r, echo=FALSE,fig.asp = .55}
 map_plot
 ```
