@@ -1,0 +1,49 @@
+---
+title: "Report on Prison Admission Trends in the U.S."
+author: "Simon Cao"
+date: "2/25/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+source("../source/analysis.R")
+```
+
+## Introduction
+<p>The data set used in this analysis is from [this repository](https://github.com/vera-institute/incarceration-trends/blob/master/incarceration_trends.csv).
+The dataset provides county-level data on incarceration in the 
+U.S. with `r format(obs_num,big.mark =",")` observations and
+`r format(var_num,big.mark =",")` variables. </p>
+<p>The United States has a significant problem in racial justice, especially in 
+racial discrimination by law enforcement. In this analysis, we focus on the 
+U.S. prison admission rate of people of color to identify the unfairness. </p>
+
+# Summary Information
+- The prison admission rate below is established on a per 100,000 people basis.
+It is clear that through 2011 to 2016, people of color suffer significant larger
+ prison admission rate than average with the black population stands out (
+greater than 1000 admission rate).
+Detailed numbers are listed below.
+
+```{r, echo=FALSE}
+kable(summary_table)
+```
+
+## Trends over time plot 
+
+```{r, echo=FALSE}
+time_trend_plot
+```
+
+
+## Variable Comparison Plot
+```{r, echo=FALSE, fig.width = 8, fig.asp = .8}
+suppressWarnings(print(variable_comparison_plot))
+```
+
+## Map plot
+```{r, echo=FALSE,fig.asp = .55}
+map_plot
+```
